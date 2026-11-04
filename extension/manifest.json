@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Vellum Notes",
+  "version": "1.0.0",
+  "description": "A quiet Markdown notes desk that saves privately on this device.",
+  "action": {
+    "default_title": "Open Vellum Notes",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icons/128.png",
+    "48": "icons/128.png",
+    "128": "icons/128.png"
+  },
+  "options_page": "options.html",
+  "permissions": []
+}
