@@ -19,9 +19,9 @@ npm run extension:build
 ```
 
 The Web Store package is created at `dist/vellum-notes-chrome.zip`. Version
-1.0.2 opens the editor in a full browser tab for better Android/Quetta
-keyboard support. Version 1.0.1 focuses the editor after creating a note and
-supports `Ctrl/Cmd+N`.
+1.0.3 keeps the editor editable in Quetta and handles plain-text paste
+explicitly. Version 1.0.2 opens the editor in a full browser tab for better
+Android/Quetta keyboard support.
 
 The extension needs no permissions and stores notes only in the local browser
 storage. It does not transmit note content to a server.

@@ -24,7 +24,7 @@ function render() {
   $("note-list").innerHTML = filtered.map((note) => `<button class="note-btn ${note.id===selectedId?"selected":""}" data-id="${note.id}"><span class="note-title">${escapeHtml(title(note.body))}</span><span class="note-snippet">${escapeHtml(note.body.replace(/\s+/g," ").slice(0,70))}</span></button>`).join("") || `<p class="count">No matching notes</p>`;
   document.querySelectorAll(".note-btn").forEach((button) => button.addEventListener("click", () => { selectedId=button.dataset.id; previewing=false; render(); }));
   editor.value = current?.body || "";
-  editor.disabled = !current;
+  editor.readOnly = false;
   $("delete").disabled = !current;
   $("empty").hidden = !!current;
   $("edited").textContent = current ? "Editing on this device" : "No note selected";
@@ -39,6 +39,17 @@ function focusEditor() { requestAnimationFrame(() => { editor.focus(); editor.se
 function createNote() { const note={id:crypto.randomUUID(),body:"# New note\n\n"}; notes=[note,...notes]; selectedId=note.id; save(); render(); focusEditor(); }
 $("new-note").addEventListener("click", createNote);
 editor.addEventListener("input", () => { const note=selected(); if(!note)return; note.body=editor.value; save(); render(); focusEditor(); });
+editor.addEventListener("paste", (event) => {
+  const note = selected();
+  const text = event.clipboardData?.getData("text/plain");
+  if (!note || text == null) return;
+  event.preventDefault();
+  editor.setRangeText(text, editor.selectionStart, editor.selectionEnd, "end");
+  note.body = editor.value;
+  save();
+  render();
+  focusEditor();
+});
 $("search").addEventListener("input", (event) => { query=event.target.value; render(); });
 $("delete").addEventListener("click", () => { if(!selected() || !confirm("Delete this note?"))return; notes=notes.filter((note)=>note.id!==selectedId); selectedId=notes[0]?.id||null; save(); render(); });
 $("write").addEventListener("click", () => { previewing=false; render(); }); $("preview").addEventListener("click", () => { previewing=true; render(); });
