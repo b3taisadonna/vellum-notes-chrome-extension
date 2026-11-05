@@ -11,7 +11,7 @@
       <aside class="sidebar" aria-label="Notes">
         <header class="sidebar-head">
           <p class="wordmark">Vellum</p>
-          <button class="icon-btn primary" id="new-note" title="New note">+</button>
+          <button class="icon-btn primary" id="new-note" title="New note (Ctrl/Cmd+N)">+</button>
         </header>
         <label class="search">
           <span aria-hidden="true">⌕</span>
@@ -31,7 +31,7 @@
           </div>
         </header>
         <div class="editor-wrap">
-          <textarea id="editor" placeholder="Start writing…" spellcheck="true" disabled></textarea>
+          <textarea id="editor" placeholder="Start writing…" spellcheck="true" aria-label="Note editor" disabled></textarea>
           <article id="read" class="markdown" hidden></article>
           <div id="empty" class="empty">Create a note to begin.</div>
         </div>

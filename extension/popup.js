@@ -1,5 +1,6 @@
 const KEY = "vellum-extension-notes";
 let notes = JSON.parse(localStorage.getItem(KEY) || "[]");
+if (!Array.isArray(notes)) notes = [];
 let selectedId = notes[0]?.id || null;
 let query = "";
 let previewing = false;
@@ -34,9 +35,18 @@ function render() {
   $("write").classList.toggle("active", !previewing); $("preview").classList.toggle("active", previewing);
 }
 function escapeHtml(value) { return value.replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char])); }
-$("new-note").addEventListener("click", () => { const note={id:crypto.randomUUID(),body:"# New note\n\n"}; notes=[note,...notes]; selectedId=note.id; save(); render(); editor.focus(); editor.setSelectionRange(editor.value.length,editor.value.length); });
-editor.addEventListener("input", () => { const note=selected(); if(!note)return; note.body=editor.value; save(); render(); editor.focus(); editor.setSelectionRange(editor.value.length,editor.value.length); });
+function focusEditor() { requestAnimationFrame(() => { editor.focus(); editor.setSelectionRange(editor.value.length, editor.value.length); }); }
+function createNote() { const note={id:crypto.randomUUID(),body:"# New note\n\n"}; notes=[note,...notes]; selectedId=note.id; save(); render(); focusEditor(); }
+$("new-note").addEventListener("click", createNote);
+editor.addEventListener("input", () => { const note=selected(); if(!note)return; note.body=editor.value; save(); render(); focusEditor(); });
 $("search").addEventListener("input", (event) => { query=event.target.value; render(); });
 $("delete").addEventListener("click", () => { if(!selected() || !confirm("Delete this note?"))return; notes=notes.filter((note)=>note.id!==selectedId); selectedId=notes[0]?.id||null; save(); render(); });
 $("write").addEventListener("click", () => { previewing=false; render(); }); $("preview").addEventListener("click", () => { previewing=true; render(); });
+document.addEventListener("keydown", (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "n") {
+    event.preventDefault();
+    createNote();
+  }
+});
+if (!selectedId) createNote();
 render();
