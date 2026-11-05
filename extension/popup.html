@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Vellum Notes</title>
     <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="editor-overrides.css" />
   </head>
   <body>
     <main class="vellum" id="app">
@@ -31,7 +32,7 @@
           </div>
         </header>
         <div class="editor-wrap">
-          <textarea id="editor" placeholder="Start writing…" spellcheck="true" aria-label="Note editor"></textarea>
+          <div id="editor" class="editor-input" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Note editor" data-placeholder="Start writing…"></div>
           <article id="read" class="markdown" hidden></article>
           <div id="empty" class="empty">Create a note to begin.</div>
         </div>

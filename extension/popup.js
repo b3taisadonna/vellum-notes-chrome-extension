@@ -9,6 +9,7 @@ const editor = $("editor");
 
 function save() { localStorage.setItem(KEY, JSON.stringify(notes)); }
 function selected() { return notes.find((note) => note.id === selectedId) || null; }
+function editorText() { return editor.textContent || ""; }
 function title(body) { return (body.split("\n").find((line) => line.trim()) || "Untitled note").replace(/^#+\s*/, "").slice(0, 80); }
 function words(body) { return body.trim() ? body.trim().split(/\s+/).length : 0; }
 function markdown(body) {
@@ -23,8 +24,8 @@ function render() {
   $("count").textContent = `${filtered.length} ${filtered.length === 1 ? "note" : "notes"}`;
   $("note-list").innerHTML = filtered.map((note) => `<button class="note-btn ${note.id===selectedId?"selected":""}" data-id="${note.id}"><span class="note-title">${escapeHtml(title(note.body))}</span><span class="note-snippet">${escapeHtml(note.body.replace(/\s+/g," ").slice(0,70))}</span></button>`).join("") || `<p class="count">No matching notes</p>`;
   document.querySelectorAll(".note-btn").forEach((button) => button.addEventListener("click", () => { selectedId=button.dataset.id; previewing=false; render(); }));
-  editor.value = current?.body || "";
-  editor.readOnly = false;
+  editor.textContent = current?.body || "";
+  editor.contentEditable = "true";
   $("delete").disabled = !current;
   $("empty").hidden = !!current;
   $("edited").textContent = current ? "Editing on this device" : "No note selected";
@@ -35,17 +36,17 @@ function render() {
   $("write").classList.toggle("active", !previewing); $("preview").classList.toggle("active", previewing);
 }
 function escapeHtml(value) { return value.replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char])); }
-function focusEditor() { requestAnimationFrame(() => { editor.focus(); editor.setSelectionRange(editor.value.length, editor.value.length); }); }
+function focusEditor() { requestAnimationFrame(() => { editor.focus(); const range = document.createRange(); range.selectNodeContents(editor); range.collapse(false); const selection = window.getSelection(); selection?.removeAllRanges(); selection?.addRange(range); }); }
 function createNote() { const note={id:crypto.randomUUID(),body:"# New note\n\n"}; notes=[note,...notes]; selectedId=note.id; save(); render(); focusEditor(); }
 $("new-note").addEventListener("click", createNote);
-editor.addEventListener("input", () => { const note=selected(); if(!note)return; note.body=editor.value; save(); render(); focusEditor(); });
+editor.addEventListener("input", () => { const note=selected(); if(!note)return; note.body=editorText(); save(); render(); focusEditor(); });
 editor.addEventListener("paste", (event) => {
   const note = selected();
   const text = event.clipboardData?.getData("text/plain");
   if (!note || text == null) return;
   event.preventDefault();
-  editor.setRangeText(text, editor.selectionStart, editor.selectionEnd, "end");
-  note.body = editor.value;
+  document.execCommand("insertText", false, text);
+  note.body = editorText();
   save();
   render();
   focusEditor();

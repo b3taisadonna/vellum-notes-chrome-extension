@@ -1,0 +1,1 @@
+.editor-input{width:100%;height:100%;overflow:auto;padding:24px 28px;outline:0;white-space:pre-wrap;word-break:break-word;background:transparent;color:var(--ink);font:16px/1.65 Georgia,serif}.editor-input:empty::before{content:attr(data-placeholder);color:#aaa197}.editor-input[contenteditable="false"]{pointer-events:none}
