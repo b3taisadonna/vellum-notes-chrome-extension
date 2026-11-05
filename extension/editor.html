@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#efeae2" />
+    <title>Vellum Notes</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="editor.css" />
+  </head>
+  <body>
+    <main class="vellum" id="app">
+      <aside class="sidebar" aria-label="Notes">
+        <header class="sidebar-head"><p class="wordmark">Vellum</p><button class="icon-btn primary" id="new-note" title="New note (Ctrl/Cmd+N)">+</button></header>
+        <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search notes" autocomplete="off" /></label>
+        <p class="count" id="count"></p><div class="note-list" id="note-list"></div><footer class="rail-foot">Saved on this device</footer>
+      </aside>
+      <section class="sheet" aria-label="Editor">
+        <header class="toolbar"><span class="toolbar-meta" id="edited">No note selected</span><div class="toolbar-actions"><button class="text-btn active" id="write">Write</button><button class="text-btn" id="preview">Preview</button><button class="icon-btn danger" id="delete" title="Delete note" disabled>×</button></div></header>
+        <div class="editor-wrap"><textarea id="editor" placeholder="Start writing…" spellcheck="true" aria-label="Note editor" disabled></textarea><article id="read" class="markdown" hidden></article><div id="empty" class="empty">Create a note to begin.</div></div>
+        <footer class="status"><span id="words">0 words</span><span>Markdown · local only</span></footer>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
